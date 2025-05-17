@@ -160,3 +160,111 @@ footer a {
 .toggle-darkmode:hover {
   background: #5d3a9c;
 }
+/* Pomodoro Timer */
+.focus-timer {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+#timer-display {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  color: #7f53ac;
+}
+
+.timer-controls button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  background: #7f53ac;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.timer-controls button:hover {
+  background: #5d3a9c;
+}
+
+/* Goal Tracker */
+.goal-tracker {
+  padding: 30px 20px;
+  text-align: center;
+}
+
+#new-task {
+  padding: 10px;
+  width: 250px;
+  border-radius: 10px;
+  border: 1px solid #7f53ac;
+  margin-right: 10px;
+}
+
+#task-list {
+  list-style: none;
+  margin-top: 20px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+}
+
+#task-list li {
+  background: #f9f8fd;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s;
+  color: #2d2d2d;
+}
+
+#task-list li.completed-task {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.delete-task-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: #7f53ac;
+  cursor: pointer;
+}
+
+.delete-task-btn:hover {
+  color: #5d3a9c;
+}
+
+/* Mascot Chat */
+.mascot-chat {
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+  color: #7f53ac;
+}
+
+/* Mood Tracker */
+.mood-tracker {
+  text-align: center;
+  padding: 20px;
+}
+
+#mood-select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #7f53ac;
+  margin-right: 10px;
+}
+
+#mood-feedback {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/
