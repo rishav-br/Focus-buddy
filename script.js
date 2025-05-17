@@ -1,293 +1,209 @@
-(() => {
-  const app = document.getElementById('app');
-  const tabs = ['timer', 'tasks', 'journal', 'analytics'];
-  let currentTab = 'timer';
+// ====== Splash Screen Control ======
+window.addEventListener('load', () => {
+  const splash = document.getElementById('splash');
+  setTimeout(() => {
+    splash.style.opacity = '0';
+    splash.style.pointerEvents = 'none';
+  }, 2000);
+});
 
-  // Timer Elements
-  const timerLabel = document.getElementById('timer-label');
-  const timerDisplay = document.getElementById('timer-display');
-  const startPauseBtn = document.getElementById('start-pause-btn');
-  const resetBtn = document.getElementById('reset-btn');
-  const focusInput = document.getElementById('focus-minutes');
-  const shortBreakInput = document.getElementById('short-break');
-  const longBreakInput = document.getElementById('long-break');
+// ====== Dark Mode Toggle ======
+const darkModeToggle = document.getElementById('darkModeToggle');
+if (localStorage.getItem('darkMode') === 'enabled') {
+  document.body.classList.add('dark-mode');
+}
 
-  // Task Elements
-  const tasksList = document.getElementById('tasks-list');
-  const newTaskInput = document.getElementById('new-task-input');
-  const taskPrioritySelect = document.getElementById('task-priority');
-  const addTaskBtn = document.getElementById('add-task-btn');
-
-  // Journal Elements
-  const moodSelect = document.getElementById('mood-select');
-  const energySelect = document.getElementById('energy-select');
-  const journalEntry = document.getElementById('journal-entry');
-
-  // Motivation Elements
-  const motivationDiv = document.getElementById('motivation');
-  const hearQuoteBtn = document.getElementById('hear-quote');
-  const quotes = [
-    "Stay positive, work hard, make it happen!",
-    "Focus on being productive instead of busy.",
-    "Every minute counts. Keep pushing!",
-    "You’re capable of amazing things!",
-    "Small steps lead to big results."
-  ];
-  let quoteIndex = 0;
-
-  // Analytics Elements
-  const analyticsBars = document.getElementById('analytics-bars');
-  const streakCountSpan = document.getElementById('streak-count');
-  const productivityScoreSpan = document.getElementById('productivity-score');
-  const weeklyFocusMinutes = [120, 150, 100, 180, 200, 90, 130];
-  const streakCount = 4;
-  const productivityScore = 85;
-
-  // Timer state
-  let phase = 'focus';
-  let timerSeconds = parseInt(focusInput.value) * 60;
-  let timerRunning = false;
-  let timerInterval = null;
-  let completedCycles = 0;
-
-  // Show/hide tabs
-  function showTab(tab) {
-    tabs.forEach(t => {
-      const section = document.getElementById(t + '-section');
-      if (section) section.style.display = t === tab ? 'block' : 'none';
-      const btn = document.querySelector(`nav button[data-tab="${t}"]`);
-      if (btn) {
-        btn.classList.toggle('active', t === tab);
-        btn.setAttribute('aria-current', t === tab ? 'page' : 'false');
-      }
-    });
-    currentTab = tab;
+darkModeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  if (document.body.classList.contains('dark-mode')) {
+    localStorage.setItem('darkMode', 'enabled');
+  } else {
+    localStorage.setItem('darkMode', 'disabled');
   }
-  showTab('timer');
+});
 
-  // Timer display formatting
-  function formatSeconds(sec) {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
-  }
-  function updateTimerDisplay() {
-    const labelMap = { focus: 'Focus Session', shortBreak: 'Short Break', longBreak: 'Long Break' };
-    timerLabel.textContent = labelMap[phase] || 'Focus Session';
-    timerDisplay.textContent = formatSeconds(timerSeconds);
-    startPauseBtn.textContent = timerRunning ? 'Pause' : 'Start';
-  }
+// ====== Pomodoro Timer ======
+const timerDisplay = document.getElementById('timer-display');
+const startBtn = document.getElementById('start-timer');
+const pauseBtn = document.getElementById('pause-timer');
+const resetBtn = document.getElementById('reset-timer');
 
-  // Timer tick
-  function timerTick() {
-    if (timerRunning) {
-      timerSeconds--;
-      if (timerSeconds < 0) {
-        clearInterval(timerInterval);
-        timerRunning = false;
-        handleTimerEnd();
-        return;
-      }
-      updateTimerDisplay();
-    }
-  }
-  function handleTimerEnd() {
-    if (phase === 'focus') {
-      completedCycles++;
-      if (completedCycles % 4 === 0) {
-        phase = 'longBreak';
-        timerSeconds = parseInt(longBreakInput.value) * 60;
-        alert('Long break! Relax and recharge.');
-      } else {
-        phase = 'shortBreak';
-        timerSeconds = parseInt(shortBreakInput.value) * 60;
-        alert('Short break! Breathe and relax.');
-      }
-    } else {
-      phase = 'focus';
-      timerSeconds = parseInt(focusInput.value) * 60;
-      alert('Back to focus!');
-    }
-    updateTimerDisplay();
-  }
-  startPauseBtn.onclick = () => {
-    if (timerRunning) {
+let timeLeft = 25 * 60; // default 25 min
+let timerInterval = null;
+
+// Load saved timer state if any
+const savedTime = localStorage.getItem('focusTimerTime');
+if (savedTime) {
+  timeLeft = parseInt(savedTime, 10);
+}
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  timerDisplay.textContent = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+  localStorage.setItem('focusTimerTime', timeLeft);
+}
+
+function startTimer() {
+  if (timerInterval) return;
+  timerInterval = setInterval(() => {
+    if (timeLeft <= 0) {
       clearInterval(timerInterval);
-      timerRunning = false;
-    } else {
-      timerRunning = true;
-      timerInterval = setInterval(timerTick, 1000);
-    }
-    updateTimerDisplay();
-  };
-  resetBtn.onclick = () => {
-    clearInterval(timerInterval);
-    timerRunning = false;
-    timerSeconds = (phase === 'focus' ? parseInt(focusInput.value) :
-      phase === 'shortBreak' ? parseInt(shortBreakInput.value) :
-        parseInt(longBreakInput.value)) * 60;
-    updateTimerDisplay();
-  };
-
-  [focusInput, shortBreakInput, longBreakInput].forEach(input => {
-    input.addEventListener('change', () => {
-      if (phase === 'focus') timerSeconds = parseInt(focusInput.value) * 60;
-      else if (phase === 'shortBreak') timerSeconds = parseInt(shortBreakInput.value) * 60;
-      else timerSeconds = parseInt(longBreakInput.value) * 60;
+      timerInterval = null;
+      alert('🎉 Focus session complete! Take a short break.');
+      timeLeft = 25 * 60;
       updateTimerDisplay();
-    });
-  });
-  updateTimerDisplay();
+      incrementStreak();
+      showMotivation('You did it! Keep up the great work!');
+    } else {
+      timeLeft--;
+      updateTimerDisplay();
+    }
+  }, 1000);
+}
 
-  // Task manager logic
-  let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-  function saveTasks() { localStorage.setItem('tasks', JSON.stringify(tasks)); }
-  function renderTasks() {
-    tasksList.innerHTML = '';
-    tasks.forEach(task => {
-      const taskDiv = document.createElement('div');
-      taskDiv.className = 'task-item';
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = task.done;
-      checkbox.className = 'task-checkbox';
-      checkbox.setAttribute('aria-label', 'Mark task as done: ' + task.text);
-      checkbox.addEventListener('change', () => {
-        task.done = checkbox.checked;
-        saveTasks();
-        renderTasks();
-      });
-      const textSpan = document.createElement('span');
-      textSpan.className = 'task-text' + (task.done ? ' done' : '');
-      textSpan.textContent = task.text;
-      const prioritySpan = document.createElement('span');
-      prioritySpan.className = 'task-priority priority-' + task.priority;
-      prioritySpan.textContent = task.priority;
-      const delBtn = document.createElement('span');
-      delBtn.className = 'task-delete';
-      delBtn.setAttribute('role', 'button');
-      delBtn.setAttribute('tabindex', '0');
-      delBtn.setAttribute('aria-label', 'Delete task ' + task.text);
-      delBtn.textContent = '✕';
-      delBtn.onclick = () => {
-        if (confirm('Delete task "' + task.text + '" ?')) {
-          tasks = tasks.filter(t => t !== task);
-          saveTasks();
-          renderTasks();
-        }
-      };
-      delBtn.onkeypress = e => {
-        if (e.key === 'Enter') delBtn.onclick();
-      };
-      taskDiv.appendChild(checkbox);
-      taskDiv.appendChild(textSpan);
-      taskDiv.appendChild(prioritySpan);
-      taskDiv.appendChild(delBtn);
-      tasksList.appendChild(taskDiv);
-    });
-  }
-  addTaskBtn.onclick = () => {
-    const text = newTaskInput.value.trim();
-    const priority = taskPrioritySelect.value;
-    if (text) {
-      tasks.unshift({ text, priority, done: false });
+function pauseTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+function resetTimer() {
+  pauseTimer();
+  timeLeft = 25 * 60;
+  updateTimerDisplay();
+}
+
+startBtn.addEventListener('click', startTimer);
+pauseBtn.addEventListener('click', pauseTimer);
+resetBtn.addEventListener('click', resetTimer);
+updateTimerDisplay();
+
+// ====== Goal Tracker ======
+const addTaskBtn = document.getElementById('add-task-btn');
+const newTaskInput = document.getElementById('new-task');
+const taskList = document.getElementById('task-list');
+
+// Load saved tasks
+let tasks = JSON.parse(localStorage.getItem('focusTasks')) || [];
+
+function saveTasks() {
+  localStorage.setItem('focusTasks', JSON.stringify(tasks));
+}
+
+function renderTasks() {
+  taskList.innerHTML = '';
+  tasks.forEach((task, index) => {
+    const li = document.createElement('li');
+    li.textContent = task.text;
+    li.className = task.completed ? 'completed-task' : '';
+    li.addEventListener('click', () => {
+      tasks[index].completed = !tasks[index].completed;
       saveTasks();
       renderTasks();
-      newTaskInput.value = '';
-      taskPrioritySelect.value = 'Normal';
-    }
-  };
-  renderTasks();
-
-  // Journal logic
-  moodSelect.value = localStorage.getItem('dailyMood') || '3';
-  energySelect.value = localStorage.getItem('dailyEnergy') || '3';
-  journalEntry.value = localStorage.getItem('journalEntry') || '';
-  moodSelect.addEventListener('change', () => localStorage.setItem('dailyMood', moodSelect.value));
-  energySelect.addEventListener('change', () => localStorage.setItem('dailyEnergy', energySelect.value));
-  journalEntry.addEventListener('input', () => localStorage.setItem('journalEntry', journalEntry.value));
-
-  // Motivational quotes with soulful voice
-  hearQuoteBtn.onclick = () => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(quotes[quoteIndex]);
-      const voices = window.speechSynthesis.getVoices();
-      // Choose a softer, more soulful voice if available
-      let soulfulVoice = voices.find(v =>
-        /(english|uk|female|sarah|kate)/i.test(v.name)
-      );
-      if (!soulfulVoice) soulfulVoice = voices[0];
-      utter.voice = soulfulVoice;
-      utter.rate = 0.85;
-      utter.pitch = 1.3;
-      window.speechSynthesis.speak(utter);
-    } else alert('Speech synthesis not supported.');
-  };
-  function cycleQuote() {
-    quoteIndex = (quoteIndex + 1) % quotes.length;
-    motivationDiv.textContent = '"' + quotes[quoteIndex] + '"';
-  }
-  setInterval(cycleQuote, 15000);
-
-  // Analytics bars
-  function renderAnalytics() {
-    analyticsBars.innerHTML = '';
-    const maxM = Math.max(...weeklyFocusMinutes);
-    weeklyFocusMinutes.forEach((min, idx) => {
-      const bar = document.createElement('div');
-      bar.className = 'analytics-bar';
-      const fill = document.createElement('div');
-      fill.className = 'analytics-bar-fill';
-      fill.style.height = (min / maxM * 100) + '%';
-      fill.title = min + ' minutes focused';
-      const label = document.createElement('div');
-      label.className = 'analytics-bar-label';
-      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      const today = new Date();
-      const di = (today.getDay() - 6 + idx + 7) % 7;
-      label.textContent = days[di];
-      bar.appendChild(fill);
-      bar.appendChild(label);
-      analyticsBars.appendChild(bar);
     });
-    streakCountSpan.textContent = streakCount;
-    productivityScoreSpan.textContent = productivityScore;
-  }
-  renderAnalytics();
 
-  // Navigation buttons
-  document.querySelectorAll('nav button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      showTab(btn.getAttribute('data-tab'));
+    // Add delete button
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '✕';
+    delBtn.className = 'delete-task-btn';
+    delBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      tasks.splice(index, 1);
+      saveTasks();
+      renderTasks();
     });
-  });
+    li.appendChild(delBtn);
 
-  // Theme toggle logic
-  const themeToggle = document.getElementById('theme-toggle');
-  themeToggle.addEventListener('click', () => {
-    const currentTheme = app.getAttribute('data-theme');
-    if (currentTheme === 'light') {
-      app.setAttribute('data-theme', 'dark');
-      themeToggle.innerHTML = '🌞 <span>Light Mode</span>';
-      // Adjust body background for dark
-      document.body.style.background = 'linear-gradient(135deg, #2f2d4e 0%, #1a1a34 100%)';
-      // Adjust text color
-      app.style.color = '#d0d3f0';
-      app.style.background = '#1a1a34cc';
-    } else {
-      app.setAttribute('data-theme', 'light');
-      themeToggle.innerHTML = '🌙 <span>Dark Mode</span>';
-      document.body.style.background = 'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)';
-      app.style.color = '#2d3a6a';
-      app.style.background = '#f0f4ffcc';
-    }
+    taskList.appendChild(li);
   });
-  // Accessibility: allow Enter & Space keys on theme toggle
-  themeToggle.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      themeToggle.click();
-    }
-  });
-})();
+}
+
+addTaskBtn.addEventListener('click', () => {
+  const taskText = newTaskInput.value.trim();
+  if (taskText.length > 0) {
+    tasks.push({ text: taskText, completed: false });
+    saveTasks();
+    renderTasks();
+    newTaskInput.value = '';
+  }
+});
+
+renderTasks();
+
+// ====== Mascot Chat - Motivational Messages ======
+const chatMessage = document.getElementById('chat-message');
+const motivationalMessages = [
+  "Keep going, you’re doing amazing! 💪",
+  "Remember, small steps lead to big changes.",
+  "Focus Buddy believes in you! 🌟",
+  "Stay positive and productive today!",
+  "You’ve got this! Take it one step at a time.",
+];
+
+function showMotivation(message) {
+  chatMessage.textContent = message;
+}
+
+function randomMotivation() {
+  const msg = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+  showMotivation(msg);
+}
+
+// Show motivation every 30 seconds during focus timer
+setInterval(() => {
+  if (timerInterval) {
+    randomMotivation();
+  }
+}, 30000);
+
+// ====== Distraction Blocker (Demo) ======
+function blockDistractions() {
+  const blockedSites = ['facebook.com', 'youtube.com', 'instagram.com'];
+  const hostname = window.location.hostname;
+  if (blockedSites.some(site => hostname.includes(site))) {
+    alert('Focus Buddy says: Stay focused! Distractions are blocked during focus sessions.');
+    window.location.href = 'about:blank'; // simple redirect
+  }
+}
+// You can expand this by integrating focus session active checks, but demo only here.
+
+// ====== Mood Tracker ======
+const moodSelect = document.getElementById('mood-select');
+const saveMoodBtn = document.getElementById('save-mood-btn');
+const moodFeedback = document.getElementById('mood-feedback');
+
+saveMoodBtn.addEventListener('click', () => {
+  const mood = moodSelect.value;
+  if (!mood) {
+    moodFeedback.textContent = 'Please select a mood before saving.';
+    moodFeedback.style.color = 'red';
+    return;
+  }
+  localStorage.setItem('focusMood', mood);
+  moodFeedback.textContent = `Mood saved: ${mood}`;
+  moodFeedback.style.color = 'green';
+});
+
+// Load saved mood
+const savedMood = localStorage.getItem('focusMood');
+if (savedMood) {
+  moodSelect.value = savedMood;
+  moodFeedback.textContent = `Your saved mood: ${savedMood}`;
+  moodFeedback.style.color = 'green';
+}
+
+// ====== Gamification: Streaks and Badges ======
+function getStreak() {
+  return parseInt(localStorage.getItem('focusStreak')) || 0;
+}
+
+function incrementStreak() {
+  let streak = getStreak() + 1;
+  localStorage.setItem('focusStreak', streak);
+  showMotivation(`🔥 You're on a ${streak}-day streak! Keep it up!`);
+}
+
+function resetStreak() {
+  localStorage.setItem('focusStreak', '0');
+}
+
