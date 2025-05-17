@@ -12,6 +12,12 @@ body {
   background: linear-gradient(to bottom, #a18cd1, #fbc2eb);
   color: #2d2d2d;
   overflow-x: hidden;
+  transition: background 0.5s, color 0.5s;
+}
+
+body.dark-mode {
+  background: linear-gradient(to bottom, #1e1e2f, #3a3a5f);
+  color: #f1f1f1;
 }
 
 #splash {
@@ -79,6 +85,11 @@ body {
   align-items: center;
   padding: 60px 20px;
   background-color: #f9f8fd;
+  transition: background 0.5s;
+}
+
+body.dark-mode .features {
+  background-color: #2d2d4f;
 }
 
 .feature {
@@ -111,6 +122,11 @@ footer {
   padding: 20px;
   text-align: center;
   font-size: 14px;
+  transition: background 0.5s;
+}
+
+body.dark-mode footer {
+  background-color: #1e1e3f;
 }
 
 footer a {
@@ -124,4 +140,23 @@ footer a {
     justify-content: center;
     gap: 40px;
   }
+}
+
+/* Toggle Button for Dark Mode */
+.toggle-darkmode {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #7f53ac;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  z-index: 10000;
+  font-weight: bold;
+}
+
+.toggle-darkmode:hover {
+  background: #5d3a9c;
 }
