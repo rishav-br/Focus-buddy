@@ -1,46 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Focus Buddy</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="hero">
-    <img src="assets/mascot.png" alt="Mascot" class="mascot" />
-    <h1>Meet Your Focus Buddy</h1>
-    <p>Your smart, friendly productivity coach</p>
+
+  <div id="splash">
+    <img src="assets/focus-logo.png" alt="Focus Buddy Logo">
+  </div>
+
+  <section class="hero">
+    <img class="mascot" src="assets/mascot.png" alt="Focus Mascot">
+    <h1>Welcome to Focus Buddy</h1>
+    <p>Your AI-powered companion to stay productive, motivated, and on track with your goals!</p>
     <a href="#features" class="cta">Explore Features</a>
-  </header>
+  </section>
 
   <section id="features" class="features">
-    <div class="feature" data-aos="fade-up">
-      <img src="assets/icons/focus.svg" alt="Focus Timer">
-      <h3>Focus Timer</h3>
-      <p>Stay productive with Pomodoro-style timers</p>
+    <div class="feature">
+      <img src="assets/timer-icon.png" alt="Pomodoro">
+      <h3>Smart Focus Timer</h3>
+      <p>Boost productivity with AI-guided Pomodoro sessions and breaks.</p>
     </div>
-    <div class="feature" data-aos="fade-up" data-aos-delay="200">
-      <img src="assets/icons/tasks.svg" alt="Task Management">
-      <h3>Smart Tasks</h3>
-      <p>Break goals into simple, achievable steps</p>
+    <div class="feature">
+      <img src="assets/goal-icon.png" alt="Goal Tracking">
+      <h3>Goal Tracker</h3>
+      <p>Track your daily goals and progress with ease.</p>
     </div>
-    <div class="feature" data-aos="fade-up" data-aos-delay="400">
-      <img src="assets/icons/confidence.svg" alt="Confidence Toolkit">
-      <h3>Confidence Toolkit</h3>
-      <p>Mini-challenges for introverts to build social confidence</p>
+    <div class="feature">
+      <img src="assets/mascot-chat.png" alt="Mascot Chat">
+      <h3>Cartoon Buddy</h3>
+      <p>Stay motivated with friendly nudges and animations from your buddy.</p>
     </div>
   </section>
 
   <footer>
-    <p>Made with 💙 by Rishav | <a href="#">GitHub</a></p>
+    Made with 💙 by Rishav. <a href="#">Contact</a>
   </footer>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    AOS.init();
+    // Splash screen control
+    window.addEventListener('load', () => {
+      const splash = document.getElementById('splash');
+      setTimeout(() => {
+        splash.style.opacity = '0';
+        splash.style.pointerEvents = 'none';
+      }, 2000);
+    });
+
+    // Local Storage Example
+    const focusData = localStorage.getItem('focusData') || '{}';
+    const parsedData = JSON.parse(focusData);
+
+    // You can update and save user data like this:
+    parsedData.visits = (parsedData.visits || 0) + 1;
+    localStorage.setItem('focusData', JSON.stringify(parsedData));
   </script>
+
 </body>
 </html>
