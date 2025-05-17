@@ -35,7 +35,44 @@
       <h3>Cartoon Buddy</h3>
       <p>Stay motivated with friendly nudges and animations from your buddy.</p>
     </div>
-  </section>
+  </section>  
+  <section id="focus-timer" class="focus-timer">
+  <h2>Focus Timer</h2>
+  <div id="timer-display">25:00</div>
+  <div class="timer-controls">
+    <button id="start-timer">Start</button>
+    <button id="pause-timer">Pause</button>
+    <button id="reset-timer">Reset</button>
+  </div>
+</section>
+
+<section id="goal-tracker" class="goal-tracker">
+  <h2>Goal Tracker</h2>
+  <input type="text" id="new-task" placeholder="Add a new task..." />
+  <button id="add-task-btn">Add Task</button>
+  <ul id="task-list"></ul>
+</section>
+
+<section id="mascot-chat" class="mascot-chat">
+  <h2>Your Buddy Says:</h2>
+  <div id="chat-message">Ready to crush your goals today? 🚀</div>
+</section>
+
+<section id="mood-tracker" class="mood-tracker">
+  <h2>Mood Tracker</h2>
+  <select id="mood-select">
+    <option value="">Select your mood</option>
+    <option value="happy">😊 Happy</option>
+    <option value="neutral">😐 Neutral</option>
+    <option value="sad">😔 Sad</option>
+  </select>
+  <button id="save-mood-btn">Save Mood</button>
+  <div id="mood-feedback"></div>
+</section>
+
+<!-- Dark mode toggle -->
+<button class="toggle-darkmode" id="darkModeToggle">Toggle Dark Mode</button>
+
 
   <footer>
     Made with 💙 by Rishav. <a href="#">Contact</a>
