@@ -1,0 +1,458 @@
+/* Import Google Font for a friendly cartoon style */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Open+Sans:wght@400;700&display=swap');
+
+/* Reset & basics */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0; padding: 0;
+  font-family: 'Open Sans', sans-serif;
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+  color: #273c75;
+  transition: background 0.3s, color 0.3s;
+}
+#app {
+  max-width: 960px;
+  margin: 40px auto 80px;
+  padding: 28px 36px;
+  background: #f0f4ffcc;
+  border-radius: 32px;
+  box-shadow:
+    0 8px 32px rgba(102, 152, 255, 0.35),
+    inset 0 0 40px #a6c6ff66;
+  backdrop-filter: blur(12px);
+}
+h1 {
+  font-family: 'Fredoka One', cursive;
+  font-weight: 900;
+  font-size: 4rem;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #1a3c83;
+  text-shadow:
+    2px 2px 0 #dbe7ff,
+    4px 4px 15px rgba(49, 84, 176, 0.6);
+}
+nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #507ddecc;
+  border-top: 1px solid #3f68c799;
+  display: flex;
+  justify-content: space-around;
+  padding: 14px 0;
+  box-shadow: 0 -6px 22px #3a5fcacc;
+  z-index: 100;
+  backdrop-filter: blur(16px);
+  border-radius: 24px 24px 0 0;
+}
+nav button {
+  background: none;
+  border: none;
+  color: #c2ddffcc;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: color 0.4s, transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+nav button:hover {
+  color: #f0f9ff;
+  transform: scale(1.1);
+}
+nav button.active {
+  color: #f9fbfe;
+  text-shadow:
+    0 0 10px #739fff,
+    0 0 20px #5378ff;
+  transform: scale(1.2);
+}
+
+/* Cards */
+section {
+  background: #ffffffdd;
+  border-radius: 36px;
+  box-shadow:
+    0 0 40px 8px #bad6ffff,
+    inset 0 0 36px 3px #a5c6fecc;
+  margin-bottom: 32px;
+  padding: 36px 48px;
+  backdrop-filter: blur(18px);
+  border: 1px solid #b0d0ffff;
+  transition: box-shadow 0.5s ease;
+}
+section:hover {
+  box-shadow:
+    0 0 50px 14px #97c1ffff,
+    inset 0 0 48px 6px #9cc0ffcc;
+}
+
+/* Timer styles */
+#timer-section {
+  text-align: center;
+}
+#timer-label {
+  font-weight: 800;
+  font-size: 30px;
+  margin-bottom: 20px;
+  color: #3e5bbf;
+  letter-spacing: 0.14em;
+  text-shadow: 0 0 18px #a5b8ff99;
+}
+#timer-display {
+  font-size: 90px;
+  font-weight: 900;
+  letter-spacing: 12px;
+  margin-bottom: 28px;
+  color: #244a99;
+  text-shadow:
+    0 0 16px #7e9fffbb,
+    0 0 30px #4f71ffcc,
+    0 0 38px #4058dbcc;
+  font-family: 'Fredoka One', cursive;
+}
+#timer-controls button {
+  background: linear-gradient(135deg, #638bff, #3c5fdb);
+  color: white;
+  border: none;
+  font-size: 22px;
+  font-weight: 900;
+  padding: 16px 60px;
+  margin: 0 18px;
+  border-radius: 40px;
+  cursor: pointer;
+  box-shadow:
+    0 10px 18px rgba(46, 71, 255, 0.7);
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  user-select: none;
+}
+#timer-controls button:hover {
+  background: linear-gradient(45deg, #92b1ff, #577fed);
+  box-shadow:
+    0 14px 26px #4c77ffcc;
+}
+#timer-settings {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+#timer-settings label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+  font-size: 17px;
+  color: #5871bfdd;
+}
+#timer-settings input {
+  margin-top: 12px;
+  border-radius: 14px;
+  border: 1.5px solid #aac1ffcc;
+  background: #e8edff;
+  padding: 12px 18px;
+  width: 92px;
+  font-size: 24px;
+  font-weight: 900;
+  color: #3d4a99e0;
+  font-family: 'Fredoka One', cursive;
+  text-align: center;
+  box-shadow: inset 0 0 20px #94a9ffcc;
+  transition: background 0.3s, border-color 0.3s;
+  user-select: text;
+}
+#timer-settings input:focus {
+  outline: none;
+  background: #c2d1ffcc;
+  border-color: #6181ffdd;
+  box-shadow: inset 0 0 28px #648dffdb;
+}
+
+/* Tasks styles */
+#tasks-section h2 {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 22px;
+  color: #3a4c91;
+  text-shadow: 0 0 6px #7c8eff80;
+}
+#new-task-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+}
+#new-task-row input, #new-task-row select {
+  flex: 1;
+  font-size: 20px;
+  padding: 14px 20px;
+  border-radius: 18px;
+  border: 1.7px solid #a9bfffcc;
+  background: #e3eaff;
+  color: #404f9b;
+  font-weight: 700;
+  font-family: 'Fredoka One', cursive;
+  box-shadow: inset 0 0 18px #8d9fffbb;
+  transition: background 0.3s, border-color 0.3s;
+}
+#new-task-row input::placeholder {
+  color: #9ca8f7cc;
+  font-weight: 600;
+}
+#new-task-row input:focus, #new-task-row select:focus {
+  outline: none;
+  background: #b3c1ffcc;
+  border-color: #5e7beddd;
+  box-shadow: inset 0 0 22px #5c7ef9ec;
+}
+#new-task-row select {
+  max-width: 150px;
+}
+#new-task-row button {
+  padding: 0 28px;
+  border: none;
+  background: #5a79ff;
+  color: #f0f2ff;
+  font-weight: 900;
+  font-size: 22px;
+  border-radius: 22px;
+  cursor: pointer;
+  box-shadow:
+    0 9px 25px rgba(82, 91, 220, 0.85);
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+#new-task-row button:hover {
+  background: #8ca1ff;
+  box-shadow:
+    0 11px 32px #7e92ffcc;
+}
+.task-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 14px;
+  border-bottom: 2px solid #a9b8ffcc;
+  font-size: 19px;
+  color: #465a9fdd;
+  font-weight: 700;
+  transition: background 0.3s;
+}
+.task-item:hover {
+  background: #d2dbffcc;
+}
+.task-checkbox {
+  margin-right: 22px;
+  cursor: pointer;
+  font-size: 30px;
+  user-select: none;
+  color: #6f7ef7cc;
+  transition: color 0.3s;
+}
+.task-checkbox.checked {
+  color: #4b57f7;
+}
+.task-text {
+  flex: 1;
+}
+.task-text.done {
+  text-decoration: line-through;
+  color: #8b93bcaa;
+  opacity: 0.65;
+}
+.task-priority {
+  font-size: 15px;
+  font-weight: 900;
+  border-radius: 26px;
+  padding: 8px 18px;
+  user-select: none;
+  margin-right: 22px;
+  box-shadow: 0 0 12px #a2abffbb;
+}
+.priority-High {
+  color: #ff6f94;
+  background: #ff90a6c4;
+}
+.priority-Normal {
+  color: #5572ff;
+  background: #9aaffcdc;
+}
+.priority-Low {
+  color: #45d4b3;
+  background: #59ceaeb6;
+}
+.task-delete {
+  cursor: pointer;
+  color: #ee6f7acc;
+  font-size: 28px;
+  user-select: none;
+  transition: color 0.3s;
+}
+.task-delete:hover {
+  color: #f34157;
+}
+
+/* Mood Journal styles */
+#journal-entry {
+  width: 100%;
+  min-height: 130px;
+  border-radius: 24px;
+  border: 2px solid #94a3fbcc;
+  background: #dce1fdcc;
+  padding: 20px 26px;
+  resize: vertical;
+  font-size: 19px;
+  color: #3a4f9b;
+  font-family: 'Fredoka One', cursive;
+  box-shadow: inset 0 0 26px #8f9fffcf;
+  transition: background 0.3s, border-color 0.3s;
+}
+#journal-entry::placeholder {
+  color: #abb5fdbb;
+}
+#journal-entry:focus {
+  outline: none;
+  background: #bbc5ffcc;
+  border-color: #638affee;
+  box-shadow: inset 0 0 36px #7f88ffcc;
+}
+#mood-select, #energy-select {
+  font-size: 22px;
+  font-weight: 700;
+  border-radius: 22px;
+  border: 2px solid #a5b6ffcc;
+  background: #c7d0ffcc;
+  color: #38466d;
+  margin-top: 16px;
+  width: 130px;
+  padding: 12px 16px;
+  box-shadow: inset 0 0 22px #9ba9ffbb;
+  transition: background 0.3s, border-color 0.3s;
+}
+#mood-select:focus, #energy-select:focus {
+  outline: none;
+  background: #aab9ffcc;
+  border-color: #546da9ff;
+  box-shadow: inset 0 0 38px #5866d7cc;
+}
+label.mood-label {
+  font-weight: 900;
+  font-size: 17px;
+  color: #4f6198;
+}
+.journal-group {
+  margin-bottom: 36px;
+}
+
+/* Motivational Quote */
+#motivation {
+  margin-top: 16px;
+  font-size: 22px;
+  font-style: italic;
+  color: #5578afcc;
+  text-align: center;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'Fredoka One', cursive;
+  text-shadow: 0 0 10px #6a84cfff;
+  user-select: none;
+}
+#hear-quote {
+  margin-top: 12px;
+  background: linear-gradient(135deg, #8e5bff, #5674ff);
+  color: #f1f3ff;
+  border: none;
+  cursor: pointer;
+  padding: 12px 38px;
+  font-size: 20px;
+  border-radius: 36px;
+  box-shadow: 0 8px 26px #637dff9f;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: background 0.4s;
+  font-family: 'Fredoka One', cursive;
+  user-select: none;
+}
+#hear-quote:hover {
+  background: linear-gradient(90deg, #ba97ff, #8292ff);
+}
+
+/* Analytics */
+#analytics-bars {
+  display: flex;
+  justify-content: space-between;
+  max-width: 580px;
+  height: 160px;
+  margin: 22px auto 36px;
+  user-select: none;
+}
+.analytics-bar {
+  flex: 1;
+  margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+.analytics-bar-fill {
+  background: linear-gradient(135deg, #6a7fdaff, #33459dff);
+  width: 24px;
+  border-radius: 16px 16px 0 0;
+  transition: height 0.7s cubic-bezier(0.22,1,0.36,1);
+}
+.analytics-bar-label {
+  margin-top: 7px;
+  color: #6481becc;
+  font-size: 15px;
+}
+
+/* Theme Toggle */
+#theme-toggle {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  background: #fff3f0cc;
+  border-radius: 20px;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  box-shadow:
+    0 4px 15px #c67a8cff;
+  transition: background 0.3s, color 0.3s;
+  font-family: 'Fredoka One', cursive;
+  font-weight: 700;
+  font-size: 16px;
+  color: #c84760;
+}
+#theme-toggle:hover {
+  background: #ff647dcc;
+  color: #fffaf8;
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
+/* Responsive */
+@media (max-width: 600px) {
+  #timer-display {
+    font-size: 60px;
+    letter-spacing: 6px;
+  }
+  nav button {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+  #analytics-bars {
+    max-width: 100%;
+    margin: 18px 0 28px;
+  }
+}
